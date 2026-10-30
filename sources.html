@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data sources · Torino Air Quality Twin</title>
+<meta name="author" content="Eng. Jad Ghantous">
+<style>
+  :root { --ink:#1b2430; --ink2:#4a5563; --muted:#6b7480; --line:#dde2e8; --soft:#f3f5f8; --accent:#2fbf71; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#eef1f4; color:var(--ink); font:15px/1.55 "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 920px; margin: 0 auto; padding: 28px 18px 60px; }
+  header img { height: 40px; }
+  h1 { margin: 10px 0 2px; font-size: 28px; letter-spacing: -0.01em; }
+  .lede { color: var(--ink2); margin: 6px 0 0; }
+  .toc { margin: 16px 0 6px; font-size: 13.5px; color: var(--muted); }
+  a { color: #13834a; }
+  .card, .block { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; margin-top: 16px; }
+  h2 { margin: 0; font-size: 19px; }
+  h3 { margin: 0 0 8px; font-size: 17px; }
+  .provider { margin: 2px 0 10px; color: var(--muted); }
+  dl { display: grid; grid-template-columns: 150px 1fr; gap: 6px 14px; margin: 0; }
+  dt { color: var(--muted); font-size: 12.5px; text-transform: uppercase; letter-spacing: .05em; padding-top: 2px; }
+  dd { margin: 0; }
+  q { quotes: none; display: block; background: var(--soft); border-left: 3px solid var(--accent); padding: 6px 10px; border-radius: 4px; }
+  code { background: var(--soft); padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  td, th { border-bottom: 1px solid var(--line); padding: 7px 6px; text-align: left; vertical-align: top; }
+  .credit { background: var(--soft); padding: 10px 12px; border-radius: 8px; font-size: 13.5px; }
+  footer { margin-top: 22px; color: var(--muted); font-size: 13px; }
+  @media (max-width: 640px) { dl { grid-template-columns: 1fr; } dt { padding-top: 8px; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <img src="brand/torino-aqt-lockup.svg" alt="Torino Air Quality Twin, by Eng. Jad Ghantous">
+    <h1>Data sources</h1>
+    <p class="lede"><b>Torino Air Quality Twin</b> by Eng. Jad Ghantous. Where every number in the twin comes from, under which terms, and what
+    to keep in mind before publishing the code or the data. No source needs an API key.</p>
+    <p class="toc"><a href="#eea">Reference air-quality stations</a> · <a href="#cams">Regional air-quality background</a> · <a href="#era5">Weather and mixing height</a> · <a href="#osm">Buildings, building parts, roads, schools and hospitals</a> · <a href="#edgar">Emissions by sector</a> · <a href="#ghsl">Population and building height</a> · <a href="#dem">Terrain for the model</a> · <a href="#ifs">Weather forecasts (leakage-free)</a> · <a href="#timesfm">Forecasting model</a> · <a href="#s5p">Satellite NO₂ (qualitative check)</a></p>
+  </header>
+  
+  <section class="card" id="eea">
+    <h2>Reference air-quality stations</h2>
+    <p class="provider">European Environment Agency (EEA), Air Quality Download Service</p>
+    <dl>
+      <dt>Used for</dt><dd>Hourly and daily NO₂, PM10 and PM2.5 at the 11 stations within 25 km of the centre; station metadata. Twin: winters 2024–25 and 2025–26, to calibrate the model and to validate it (leave one station out). Forecast tests: hourly NO₂ from Sep 2021 to Feb 2026. Verified data (E1a) up to Dec 2025; up-to-date data (E2a, preliminary) for Jan–Feb 2026, the verified value kept where both exist.</dd>
+      
+      <dt>Licence</dt><dd>EEA content is published under CC BY unless otherwise indicated; re-use for commercial or non-commercial purposes is permitted free of charge provided the source is acknowledged.</dd>
+      <dt>Attribution</dt><dd><q>Air-quality data: European Environment Agency, Air Quality e-Reporting (verified E1a and up-to-date E2a), data reported by Italy.</q></dd>
+      
+      
+      <dt>Links</dt><dd><a href="https://www.eea.europa.eu/legal/copyright" target="_blank" rel="noopener">EEA legal notice / copyright</a> · <a href="https://aqportal.discomap.eea.europa.eu/download-data" target="_blank" rel="noopener">Air Quality Download Service</a></dd>
+    </dl>
+  </section>
+  <section class="card" id="cams">
+    <h2>Regional air-quality background</h2>
+    <p class="provider">Copernicus Atmosphere Monitoring Service (CAMS) European air-quality ensemble, served by Open-Meteo</p>
+    <dl>
+      <dt>Used for</dt><dd>Hourly NO₂, PM10 and PM2.5 on the CAMS 0.1° grid around Turin: the background term of the twin (b · CAMS), winters 2024–25 and 2025–26. Also at each station for the forecast baselines marked † (winter 2025–26).</dd>
+      
+      <dt>Licence</dt><dd>Copernicus products in the Atmosphere Data Store moved to the Creative Commons Attribution licence (CC BY 4.0) on 2 July 2025. Open-Meteo data are CC BY 4.0; its free API is for non-commercial use (commercial use needs a subscription).</dd>
+      <dt>Attribution</dt><dd><q>Contains modified Copernicus Atmosphere Monitoring Service information (2024–2026). Air-quality data by Open-Meteo.com (CC BY 4.0). Neither the European Commission nor ECMWF is responsible for any use of this information.</q></dd>
+      
+      
+      <dt>Links</dt><dd><a href="https://forum.ecmwf.int/t/cc-by-licence-to-replace-licence-to-use-copernicus-products-on-02-july-2025/13464" target="_blank" rel="noopener">ECMWF announcement: CC BY replaces the Copernicus licence (2 July 2025)</a> · <a href="https://open-meteo.com/en/licence" target="_blank" rel="noopener">Open-Meteo licence</a> · <a href="https://open-meteo.com/en/terms" target="_blank" rel="noopener">Open-Meteo terms</a></dd>
+    </dl>
+  </section>
+  <section class="card" id="era5">
+    <h2>Weather and mixing height</h2>
+    <p class="provider">ERA5 reanalysis, Copernicus Climate Change Service (C3S) / ECMWF, served by Open-Meteo</p>
+    <dl>
+      <dt>Used for</dt><dd>Hourly 10 m wind, 2 m temperature, boundary-layer (mixing) height, cloud cover and shortwave radiation on the 0.25° grid: dispersion, the inversion lid and the stability class (winters 2024–25 and 2025–26). At the box centre, Sep–Feb 2021–2026, for the weather-regression baseline of the five-winter forecast test.</dd>
+      
+      <dt>Licence</dt><dd>Copernicus products in the Climate Data Store moved to CC BY 4.0 on 2 July 2025. Open-Meteo data are CC BY 4.0; the free API is for non-commercial use.</dd>
+      <dt>Attribution</dt><dd><q>Contains modified Copernicus Climate Change Service information (2021–2026). Weather data by Open-Meteo.com (CC BY 4.0).</q></dd>
+      
+      
+      <dt>Links</dt><dd><a href="https://apps.ecmwf.int/datasets/licences/era5" target="_blank" rel="noopener">ERA5 licence page (ECMWF)</a> · <a href="https://open-meteo.com/en/licence" target="_blank" rel="noopener">Open-Meteo licence</a></dd>
+    </dl>
+  </section>
+  <section class="card" id="osm">
+    <h2>Buildings, building parts, roads, schools and hospitals</h2>
+    <p class="provider">OpenStreetMap contributors, via the Overpass API</p>
+    <dl>
+      <dt>Used for</dt><dd>126 k building footprints and their heights or floor counts, 3D building parts (the Mole Antonelliana's 12 parts), 5,567 km of roads to place traffic emissions, and schools/hospitals for exposure.</dd>
+      
+      <dt>Licence</dt><dd>Open Database License (ODbL) 1.0.</dd>
+      <dt>Attribution</dt><dd><q>© OpenStreetMap contributors (ODbL).</q></dd>
+      
+      
+      <dt>Links</dt><dd><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap copyright and licence</a></dd>
+    </dl>
+  </section>
+  <section class="card" id="edgar">
+    <h2>Emissions by sector</h2>
+    <p class="provider">EDGAR v8.1 air pollutants, European Commission Joint Research Centre (JRC)</p>
+    <dl>
+      <dt>Used for</dt><dd>2022 NOx, PM2.5 and PM10 on 0.1° cells for road transport (TRO), energy for buildings (RCO), power, industry, non-road transport and totals. Road and heating emissions are downscaled to the 100 m grid.</dd>
+      
+      <dt>Licence</dt><dd>The EDGAR v8.1 air-pollutant page sets the condition below; it does not name a licence (EU content is generally CC BY 4.0, as stated on the EDGAR v8.0 pages). Check the EDGAR terms of use before redistributing the files themselves.</dd>
+      <dt>Attribution</dt><dd><q>Emissions: EDGAR v8.1 Global Air Pollutant Emissions, European Commission JRC (https://edgar.jrc.ec.europa.eu/dataset_ap81).</q></dd>
+      
+      
+      <dt>Links</dt><dd><a href="https://edgar.jrc.ec.europa.eu/dataset_ap81" target="_blank" rel="noopener">EDGAR v8.1 air pollutants</a></dd>
+    </dl>
+  </section>
+  <section class="card" id="ghsl">
+    <h2>Population and building height</h2>
+    <p class="provider">Global Human Settlement Layer (GHSL) R2023A, European Commission JRC</p>
+    <dl>
+      <dt>Used for</dt><dd>GHS-POP (2020, 100 m): spreads heating emissions and weights the exposure statistics. GHS-BUILT-H ANBH (2018, 100 m): building height where OSM has none (shown lighter in 3D).</dd>
+      
+      <dt>Licence</dt><dd>“Reuse of this data is authorised with proper acknowledgment of the source.” © European Union.</dd>
+      <dt>Attribution</dt><dd><q>Population: GHS-POP R2023A; building height: GHS-BUILT-H R2023A. © European Union, Joint Research Centre (GHSL).</q></dd>
+      
+      
+      <dt>Links</dt><dd><a href="https://human-settlement.emergency.copernicus.eu/download.php" target="_blank" rel="noopener">GHSL download and use conditions</a></dd>
+    </dl>
+  </section>
+  <section class="card" id="dem">
+    <h2>Terrain for the model</h2>
+    <p class="provider">Copernicus DEM GLO-30 (AWS Open Data copy)</p>
+    <dl>
+      <dt>Used for</dt><dd>Ground elevation of the box (30 m): the surface the 3D air volume follows.</dd>
+      
+      <dt>Licence</dt><dd>Licence for the use of Copernicus WorldDEM-30, with a required liability disclaimer.</dd>
+      <dt>Attribution</dt><dd><q>Produced using Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved. The organisations in charge of the Copernicus programme by law or by delegation do not incur any liability for any use of the Copernicus WorldDEM-30.</q></dd>
+      
+      
+      <dt>Links</dt><dd><a href="https://documentation.dataspace.copernicus.eu/APIs/SentinelHub/Data/DEM/resources/license/License-COPDEM-30.pdf" target="_blank" rel="noopener">Copernicus DEM licence (PDF)</a></dd>
+    </dl>
+  </section>
+  <section class="card" id="ifs">
+    <h2>Weather forecasts (leakage-free)</h2>
+    <p class="provider">ECMWF IFS 0.25° open-data forecasts, served by the Open-Meteo Previous Runs API</p>
+    <dl>
+      <dt>Used for</dt><dd>For every hour, the forecast issued about 24 h earlier (<code>_previous_day1</code>): temperature, wind at 10 and 100 m, cloud cover and radiation at the box centre, Jul 2025 – Feb 2026. Covariates of the forecast backtest, so no future information leaks into a forecast.</dd>
+      
+      <dt>Licence</dt><dd>ECMWF open data are licensed CC BY 4.0 under the ECMWF Terms of Use; Open-Meteo data are CC BY 4.0, its free API is for non-commercial use.</dd>
+      <dt>Attribution</dt><dd><q>Contains modified ECMWF open data (2025–2026). Weather data by Open-Meteo.com (CC BY 4.0).</q></dd>
+      
+      
+      <dt>Links</dt><dd><a href="https://www.ecmwf.int/en/forecasts/datasets/open-data" target="_blank" rel="noopener">ECMWF open data</a> · <a href="https://open-meteo.com/en/docs/previous-runs-api" target="_blank" rel="noopener">Open-Meteo Previous Runs API</a></dd>
+    </dl>
+  </section>
+  <section class="card" id="timesfm">
+    <h2>Forecasting model</h2>
+    <p class="provider">TimesFM 2.5 (200M parameters, PyTorch), Google Research, via Hugging Face</p>
+    <dl>
+      <dt>Used for</dt><dd>Zero-shot forecasts of hourly NO₂ (next 24 h) and daily PM from each station's own history: the backtests, the five-winter test, the 2025–26 forecast-vs-reality test and the viewer's forecast tab. Not trained or fine-tuned on Turin.</dd>
+      
+      <dt>Licence</dt><dd>Apache License 2.0 (weights and code). TimesFM 3.0 was not used: its weights are for non-commercial use only.</dd>
+      <dt>Attribution</dt><dd><q>Forecasts made with TimesFM 2.5 (Google Research, Apache-2.0). Das, Kong, Sen and Zhou, “A decoder-only foundation model for time-series forecasting”, ICML 2024.</q></dd>
+      
+      
+      <dt>Links</dt><dd><a href="https://huggingface.co/google/timesfm-2.5-200m-pytorch" target="_blank" rel="noopener">Model card</a> · <a href="https://github.com/google-research/timesfm" target="_blank" rel="noopener">Code</a></dd>
+    </dl>
+  </section>
+  <section class="card" id="s5p">
+    <h2>Satellite NO₂ (qualitative check)</h2>
+    <p class="provider">Copernicus Sentinel-5P TROPOMI Level-2 NO₂, cloud-optimised copy by MEEO on AWS</p>
+    <dl>
+      <dt>Used for</dt><dd>Winter-mean tropospheric NO₂ column over the box (qa ≥ 0.75), compared with the station pattern in the data report. Not used in the model.</dd>
+      
+      <dt>Licence</dt><dd>Copernicus Sentinel data licence (free, full and open access).</dd>
+      <dt>Attribution</dt><dd><q>Contains modified Copernicus Sentinel data (2024–2025).</q></dd>
+      
+      
+      <dt>Links</dt><dd><a href="https://ecds.ecmwf.int/licences/ec-sentinel" target="_blank" rel="noopener">Copernicus Sentinel data licence</a> · <a href="https://registry.opendata.aws/sentinel5p/" target="_blank" rel="noopener">AWS registry entry</a></dd>
+    </dl>
+  </section>
+  <section class="block">
+    <h3>The viewer</h3>
+    <table><tr><th>Part</th><th>Source</th><th>Licence / credit</th><th></th></tr><tr><td>Basemap</td><td>OpenFreeMap (Positron style), OpenMapTiles schema, OpenStreetMap data</td><td>OpenFreeMap © OpenMapTiles Data from OpenStreetMap — shown automatically by MapLibre.</td><td><a href="https://openfreemap.org" target="_blank" rel="noopener">link</a></td></tr><tr><td>3D terrain in the viewer</td><td>Terrain Tiles on AWS (Terrarium encoding, originally by Mapzen)</td><td>Elevation: USGS (SRTM, GMTED2010, 3DEP), NOAA ETOPO1 and others, compiled by Mapzen; see the Joerd attribution list.</td><td><a href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md" target="_blank" rel="noopener">link</a></td></tr><tr><td>Map library</td><td>MapLibre GL JS 5.6.0</td><td>BSD 3-Clause licence.</td><td><a href="https://github.com/maplibre/maplibre-gl-js" target="_blank" rel="noopener">link</a></td></tr><tr><td>Brand</td><td>Greenovation Engineer logo; Torino Air Quality Twin logo (web/brand/)</td><td>© Eng. Jad Ghantous. Not covered by the code licence; keep them out of any open-source grant.</td><td></td></tr><tr><td>Forecast view</td><td>TimesFM 2.5 past forecasts at the stations</td><td>Google Research, Apache-2.0 (see “Forecasting model”).</td><td><a href="https://huggingface.co/google/timesfm-2.5-200m-pytorch" target="_blank" rel="noopener">link</a></td></tr><tr><td>Chart colours</td><td>Validated categorical palette for the forecast graphs</td><td>Checked for colour-blind separation; no licence needed.</td><td></td></tr></table>
+  </section>
+  <section class="block">
+    <h3>Methods and standards cited</h3>
+    <ul><li>WHO Global Air Quality Guidelines (2021): 24-hour guidelines NO₂ 25, PM10 45, PM2.5 15 µg/m³.</li><li>EU Directive 2008/50/EC: data-capture rules (daily means need ≥ 18 valid hours).</li><li>Turner (1970) stability classes; Briggs (1973) urban dispersion coefficients as fitted by McElroy &amp; Pooler.</li><li>Denby et al. (2020), uEMEP: sub-grid downscaling without double counting the regional model&#x27;s emissions.</li><li>Chang &amp; Hanna (2004): FB, NMSE, FAC2 model-evaluation statistics.</li><li>Das, Kong, Sen &amp; Zhou (2024), ICML: TimesFM, a decoder-only foundation model for time-series forecasting.</li><li>Gneiting &amp; Raftery (2007): proper scoring rules; CRPS from quantiles.</li><li>Diebold &amp; Mariano (1995); Harvey, Leybourne &amp; Newbold (1997); Newey &amp; West (1987): forecast-comparison tests.</li><li>Künsch (1989): moving-block bootstrap for the skill intervals.</li></ul>
+  </section>
+  <section class="block">
+    <h3>Open-source software</h3>
+    <p>NumPy (BSD-3-Clause) · pandas (BSD-3-Clause) · SciPy (BSD-3-Clause) · Matplotlib (PSF-based Matplotlib licence) · rasterio (BSD-3-Clause) · Shapely (BSD-3-Clause) · pyproj (MIT) · PyArrow (Apache-2.0) · Requests (Apache-2.0) · PyTorch (BSD-style (PyTorch licence)) · timesfm (Apache-2.0) · huggingface_hub (Apache-2.0) · pytest (MIT) · MapLibre GL JS (BSD-3-Clause).</p>
+  </section>
+
+  <section class="block">
+    <h3>Data in this public viewer</h3>
+    <ul>
+      <li><b>Selected days only:</b> daily-mean maps for a few days per winter, chosen by the twin from the data.</li>
+      <li><b>OpenStreetMap-derived files</b> (<code>data/buildings.json</code>, <code>data/sites.json</code>) are made available
+          under the Open Database License (ODbL) 1.0, © OpenStreetMap contributors.</li>
+      <li><b>Terrain mesh</b> (<code>data/air_mesh.bin</code>): produced using Copernicus WorldDEM-30 (notice above).</li>
+      <li><b>Viewer code and logo:</b> © Eng. Jad Ghantous, all rights reserved; see LICENSE.</li>
+      <li>Not for regulatory use. January–February 2026 measurements are preliminary.</li>
+    </ul>
+    <p class="credit"><b>Short credit line:</b> Air-quality data: European Environment Agency, Air Quality e-Reporting (verified E1a and up-to-date E2a), data reported by Italy · Contains modified Copernicus Atmosphere Monitoring Service information (2024–2026) · Contains modified Copernicus Climate Change Service information (2021–2026) · © OpenStreetMap contributors (ODbL) · Emissions: EDGAR v8 · Population: GHS-POP R2023A; building height: GHS-BUILT-H R2023A · Produced using Copernicus WorldDEM-30 © DLR e · Contains modified ECMWF open data (2025–2026) · Forecasts made with TimesFM 2 · Contains modified Copernicus Sentinel data (2024–2025). © OpenStreetMap contributors. Basemap OpenFreeMap © OpenMapTiles. Terrain tiles: Mapzen / AWS.</p>
+  </section>
+  <footer>Licence and attribution texts checked on each provider's pages on 2026-10-30.
+  · <a href="index.html">Back to the twin</a></footer>
+</main>
+</body>
+</html>
