@@ -770,9 +770,10 @@ function resetSlider() {
   update(true);
   window.addEventListener("resize", drawSpark);
   if (TOUR) {
-    document.body.classList.add("tour");
+    const wide = new URLSearchParams(location.search).get("tour") === "wide";
+    document.body.classList.add("tour", ...(wide ? ["tour-wide"] : []));
     const s = document.createElement("script");
-    s.src = "tour.js?v=4";
+    s.src = wide ? "tour-wide.js?v=10" : "tour.js?v=5";
     document.head.appendChild(s);
   }
 })();

@@ -10,6 +10,8 @@ function makeAirLayer({ mesh, nx, ny, sheets = 7, opacity = 0.55, fadeNodes = 8 
     edge[r * nx + c] = d >= 1 ? 1 : d * d * (3 - 2 * d);
   }
   let gl, prog, posBuf, colBuf, idxBuf, nIdx, idxType, dirty = true, mixingHeight = 30, mpm = 1;
+  let ox = 0, oy = 0;
+  const local = new Float32Array(16);
 
   const VS = `
     attribute vec3 a_pos; attribute vec4 a_col;
@@ -39,9 +41,12 @@ function makeAirLayer({ mesh, nx, ny, sheets = 7, opacity = 0.55, fadeNodes = 8 
       gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FS));
       gl.linkProgram(prog);
       const pos = new Float32Array(n * 3);
+      const mid = 3 * (Math.floor(ny / 2) * nx + Math.floor(nx / 2));
+      const o = maplibregl.MercatorCoordinate.fromLngLat([mesh[mid], mesh[mid + 1]], 0);
+      ox = o.x; oy = o.y;
       for (let i = 0; i < n; i++) {
         const m = maplibregl.MercatorCoordinate.fromLngLat([mesh[3 * i], mesh[3 * i + 1]], mesh[3 * i + 2]);
-        pos[3 * i] = m.x; pos[3 * i + 1] = m.y; pos[3 * i + 2] = m.z;
+        pos[3 * i] = m.x - ox; pos[3 * i + 1] = m.y - oy; pos[3 * i + 2] = m.z;
         if (i === 0) mpm = m.meterInMercatorCoordinateUnits();
       }
       posBuf = gl.createBuffer();
@@ -74,7 +79,9 @@ function makeAirLayer({ mesh, nx, ny, sheets = 7, opacity = 0.55, fadeNodes = 8 
       }
       gl.useProgram(prog);
       const matrix = (options.defaultProjectionData && options.defaultProjectionData.mainMatrix) || options.modelViewProjectionMatrix;
-      gl.uniformMatrix4fv(gl.getUniformLocation(prog, "u_matrix"), false, matrix);
+      for (let i = 0; i < 12; i++) local[i] = matrix[i];
+      for (let i = 0; i < 4; i++) local[12 + i] = matrix[i] * ox + matrix[4 + i] * oy + matrix[12 + i];
+      gl.uniformMatrix4fv(gl.getUniformLocation(prog, "u_matrix"), false, local);
       gl.uniform1f(gl.getUniformLocation(prog, "u_alpha"), sheetAlpha);
       const aPos = gl.getAttribLocation(prog, "a_pos"), aCol = gl.getAttribLocation(prog, "a_col");
       gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);

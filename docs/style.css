@@ -83,6 +83,7 @@ input[type=range] { flex: 1; accent-color: var(--accent); }
 body.tour #panel, body.tour #map-legend, body.tour #timeline, body.tour #chart, body.tour #about,
 body.tour .maplibregl-control-container { display: none !important; }
 body.tour #map { inset: 0 auto auto 0; width: 432px; height: 540px; } /* x 2.5 = 1080 x 1350 frames, whatever the window */
+body.tour-wide #map { width: 768px; height: 432px; }                     /* x 2.5 = 1920 x 1080 */
 body.clean #panel, body.clean #map-legend, body.clean #timeline, body.clean #chart,
 body.clean .maplibregl-ctrl-group:not(.view-ctrl) { display: none !important; }
 .ml-note { font-size: 11px; color: var(--muted); }
