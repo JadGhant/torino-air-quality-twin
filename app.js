@@ -204,7 +204,7 @@ async function initMap() {
                  interactive: false, fadeDuration: 0 } : {}),
     attributionControl: { compact: window.innerWidth < 760, customAttribution:
       `Twin: ${S.meta.author} · EEA · CAMS, ERA5 (Copernicus) via Open-Meteo.com · EDGAR, GHSL (JRC) · Copernicus DEM · ` +
-      `Forecasts: TimesFM 2.5 (Google, Apache-2.0) · <a href="sources.html" target="_blank" rel="noopener">Sources</a>` },
+      `<a href="sources.html" target="_blank" rel="noopener">Sources</a>` },
   });
   map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "top-right");
   map.addControl(viewControl(), "top-right");

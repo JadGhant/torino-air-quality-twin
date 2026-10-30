@@ -3,7 +3,7 @@
 const I18N = {
   en: {
     locale: "en-GB",
-    loading: "Loading the twin (about 100 MB)…",
+    loading: "Loading the twin (about 7 MB)…",
     subtitle: "Inverno · Winter: the city's air, hour by hour",
     tl_avg: (v) => `city average ${v} µg/m³`,
     kicker: (w) => `Digital twin · winter ${w}`,
@@ -89,7 +89,7 @@ const I18N = {
   },
   it: {
     locale: "it-IT",
-    loading: "Caricamento del gemello (circa 100 MB)…",
+    loading: "Caricamento del gemello (circa 7 MB)…",
     subtitle: "Inverno · Winter: l'aria della città, ora per ora",
     tl_avg: (v) => `media cittadina ${v} µg/m³`,
     kicker: (w) => `Gemello digitale · inverno ${w}`,
