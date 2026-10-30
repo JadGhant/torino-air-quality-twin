@@ -31,7 +31,7 @@ async function load() {
   await loadWinter("");
   S.pop = new Float32Array(await (await get("population.bin")).arrayBuffer());
   S.popTotal = S.pop.reduce((a, b) => a + b, 0);
-  S.sites = await (await get("sites.json")).json();
+  S.sites = await get("sites.json").then((r) => r.json()).catch(() => []);
   S.mesh = new Float32Array(await (await get("air_mesh.bin")).arrayBuffer());
   S.fc = await get("forecast_no2.json").then((r) => r.json()).catch(() => null);
 }
@@ -48,7 +48,7 @@ async function loadWinter(id) {
     if (meta.local_layer[p] && meta.edition !== "public") traffic[p] = await bin(`${k}_traffic.bin`);
     lut[p] = Float32Array.from({ length: 256 }, (_, i) => meta.scales[p] * (i / 255) ** 2);
   }
-  const unc = await bin("uncertainty.bin");
+  const unc = await bin("uncertainty.bin").catch(() => null);
   const stations = await (await get(dir + "stations.json")).json();
   const met = await (await get(dir + "met.json")).json();
   Object.assign(S, { meta, daily, episodes, traffic, lut, unc, stations, met, wdir: id, seriesCache: {} });
@@ -129,7 +129,7 @@ function paintVeil() {
   const { nx, ny } = S.meta.grid;
   veil.width = nx; veil.height = ny;
   const g = veil.getContext("2d"), img = g.createImageData(nx, ny);
-  for (let i = 0; i < S.cells; i++) img.data.set([200, 205, 212, 200 * (S.unc[i] / 255) ** 2], i * 4);
+  if (S.unc) for (let i = 0; i < S.cells; i++) img.data.set([200, 205, 212, 200 * (S.unc[i] / 255) ** 2], i * 4);
   g.putImageData(img, 0, 0);
   return veil.toDataURL();
 }
@@ -269,9 +269,9 @@ async function initMap() {
     if (map.queryRenderedFeatures(e.point, { layers: ["stations"] }).length) return;
     const i = cellAt(e.lngLat);
     if (i < 0) return;
-    const v = field()[i], u = S.unc[i] / 255, lv = L().unc_levels[u < 0.4 ? 0 : u < 0.7 ? 1 : 2];
+    const v = field()[i], u = S.unc ? S.unc[i] / 255 : null, lv = u == null ? null : L().unc_levels[u < 0.4 ? 0 : u < 0.7 ? 1 : 2];
     new maplibregl.Popup({ closeButton: false }).setLngLat(e.lngLat).setHTML(
-      `<b>${fmt(v)} µg/m³</b> ${LABEL[S.pol]}<br><span style="color:${INK.muted}">${whenText()} · ${L().popup_cell}<br>${L().popup_unc(lv)}</span>`).addTo(map);
+      `<b>${fmt(v)} µg/m³</b> ${LABEL[S.pol]}<br><span style="color:${INK.muted}">${whenText()} · ${L().popup_cell}${lv ? `<br>${L().popup_unc(lv)}` : ""}</span>`).addTo(map);
   });
 }
 
@@ -721,6 +721,8 @@ function buildControls() {
   const toggle = (id, layers) => ($(id).onchange = (e) => layers.forEach((l) => map.setLayoutProperty(l, "visibility", e.target.checked ? "visible" : "none")));
   toggle("l-buildings", ["buildings"]); toggle("l-air", ["air3d"]); toggle("l-ground", ["conc"]);
   toggle("l-stations", ["stations"]); toggle("l-sites", ["sites"]); toggle("l-unc", ["veil"]);
+  $("l-sites").closest("label").classList.toggle("hidden", !S.sites.length);
+  $("l-unc").closest("label").classList.toggle("hidden", !S.unc);
   $("chart-close").onclick = () => { S.selected = null; $("chart").classList.add("hidden"); };
   $("chart-tabs").onclick = (e) => {
     const t = e.target.dataset.tab; if (!t) return;

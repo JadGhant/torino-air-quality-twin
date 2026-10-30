@@ -1,16 +1,16 @@
 Torino Air Quality Twin, public viewer
 Copyright (c) 2026 Eng. Jad Ghantous. All rights reserved.
 
-The viewer code (index.html, app.js, air-layer.js, i18n.js, style.css) and the logos in brand/ may be viewed
+The viewer code (docs/: index.html, app.js, air-layer.js, i18n.js, style.css) and the logos in docs/brand/ may be viewed
 in a browser but may not be copied, modified, redistributed or used in other works without written permission
 from the author.
 
-Third-party data in data/ keep their own licences and are not covered by the statement above:
-- data/buildings.json and data/sites.json are derived from OpenStreetMap and are made available under the
+Third-party data in docs/data/ keep their own licences and are not covered by the statement above:
+- docs/data/buildings.json is derived from OpenStreetMap and is made available under the
   Open Database License (ODbL) 1.0: https://opendatacommons.org/licenses/odbl/1-0/ . © OpenStreetMap contributors.
-- data/air_mesh.bin was produced using Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space
+- docs/data/air_mesh.bin was produced using Copernicus WorldDEM-30 © DLR e.V. 2010-2014 and © Airbus Defence and Space
   GmbH 2014-2018 provided under COPERNICUS by the European Union and ESA; all rights reserved.
 - The concentration fields are model output derived from EEA, Copernicus (CAMS, ERA5), EDGAR and GHSL data;
-  see sources.html for each provider's licence and required attribution.
+  see docs/sources.html for each provider's licence and required attribution.
 - The viewer loads MapLibre GL JS (BSD-3-Clause), OpenFreeMap tiles (© OpenMapTiles, © OpenStreetMap contributors)
   and Terrain Tiles on AWS (Mapzen) at run time.
